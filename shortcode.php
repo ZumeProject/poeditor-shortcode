@@ -97,9 +97,6 @@ class Poeditor_Shortcode {
         return ob_get_clean();
     }
 
-
-
-
     public function list_project_languages( $project_id ) {
         $api_url = 'https://api.poeditor.com/v2/languages/list';
         $args = [

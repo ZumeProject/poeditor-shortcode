@@ -214,7 +214,43 @@ class Poeditor_Shortcode_Admin {
             <tbody>
             <tr>
                 <td>
-                    Content
+                    This is a simple plugin that connects to a POEditor project through an API key provided to admins in
+                    the account area. Using this key it generates shortcodes for each project and that shortcode can be added
+                    to any page or post to list with a progress bar the status of that language.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <hr>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    All of these css values can be overridden<br>
+                    .ui-progressbar {<br>
+                    border: 1px solid lightgrey;<br>
+                    height: 40px;<br>
+                    }<br>
+                    .ui-progressbar-value {<br>
+                    background-color: #8bc34a;<br>
+                    height: 40px;<br>
+                    }<br>
+                    .progressbar-element-wrapper {<br>
+                    width: 100%;<br>
+                    padding-bottom:20px;<br>
+                    }<br>
+                    .progressbar-element-title {<br>
+                    }<br>
+                    .progressbar-element-bar {<br>
+                    }<br>
+                    span.language-name {<br>
+                    font-size:1.3em;<br>
+                    font-weight:bold;<br>
+                    }<br>
+                    span.language-percentage {<br>
+                    font-size:1.3em;<br>
+                    font-weight:bold;<br>
+                    }<br>
                 </td>
             </tr>
             </tbody>
