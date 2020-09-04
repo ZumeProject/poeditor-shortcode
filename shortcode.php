@@ -11,8 +11,6 @@ class Poeditor_Shortcode {
     public $title = 'POEditor Shortcode';
     public $permissions = 'manage_options';
     public $namespace = '';
-    public $api_key = '5ff0c9a20a7ecdf512ecdf02bacc6ad2';
-    public $poe_list_projects_url = 'https://api.poeditor.com/v2/projects/list';
 
     /**  Singleton */
     private static $_instance = null;
@@ -42,7 +40,7 @@ class Poeditor_Shortcode {
     public function short_code( $atts ){
         wp_enqueue_script( 'jquery-ui-progressbar' );
 
-        $languages = $this->list_project_languages(251019);
+        $languages = $this->list_project_languages($atts['id']);
 
         ob_start();
         ?>
