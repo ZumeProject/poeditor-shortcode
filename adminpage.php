@@ -150,7 +150,7 @@ class Poeditor_Shortcode_Admin {
                     <tr>
                         <td><?php echo esc_html( $project['name'] ) ?></td>
                         <td><?php echo esc_html( $project['id'] ) ?></td>
-                        <td>[peoeditor_shortcode id="<?php echo esc_html( $project['id'] ) ?>" name="<?php echo esc_html( $project['name'] ) ?>"]</td>
+                        <td>[poeditor_shortcode id="<?php echo esc_html( $project['id'] ) ?>" name="<?php echo esc_html( $project['name'] ) ?>"]</td>
                     </tr>
                     <?php
                 }

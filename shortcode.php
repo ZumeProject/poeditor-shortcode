@@ -31,16 +31,17 @@ class Poeditor_Shortcode {
             return;
         }
 
-        $this->namespace = $this->token . '/v1';
+        $this->namespace = 'poeditor_shortcode/v1';
 
-        add_shortcode( $this->token, [ $this, 'short_code' ] );
-
+        add_shortcode( 'poeditor_shortcode', [ $this, 'short_code' ] );
     }
 
-    public function short_code( $atts ){
+    public function short_code( $atts = [] ){
+        wp_enqueue_script( 'jquery-ui' );
         wp_enqueue_script( 'jquery-ui-progressbar' );
 
-        $languages = $this->list_project_languages($atts['id']);
+        $id = (int) $atts['id'];
+        $languages = $this->list_project_languages( $id );
 
         ob_start();
         ?>
