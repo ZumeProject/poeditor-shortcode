@@ -72,7 +72,17 @@ class Poeditor_Shortcode{
         wp_enqueue_script( 'jquery-ui-progressbar' );
 
         $id = (int) $atts['id'];
-        $languages = $this->list_project_languages( $id );
+
+        $languages = get_transient( "dt_poeditor_languages" );
+        if ( empty( $languages ) ){
+            $languages = $this->list_project_languages( $id );
+            set_transient( 'dt_poeditor_languages', $languages, HOUR_IN_SECONDS );
+        }
+        uasort( $languages, function ( $a, $b ){
+            return $b["percentage"] <=> $a["percentage"];
+        });
+
+
 
         ob_start();
         ?>
@@ -110,13 +120,13 @@ class Poeditor_Shortcode{
         </style>
         <div id="language_list"></div>
         <script>
-            let languages = [<?php echo json_encode( $languages ) ?>][0]
+            let languages = [<?php echo json_encode( array_values( $languages ) ) ?>][0]
             let language_list = jQuery('#language_list')
             jQuery(document).ready(function () {
                 jQuery.each(languages, function (i, v) {
                     language_list.append(`
                      <div class="progressbar-element-wrapper">
-                        <div class="progressbar-element-title"><span class="language-name">${v.name}</span> <span class="language-percentage">(${v.percentage}%)</span></div>
+                        <div class="progressbar-element-title"><span class="language-name">${i+1}. ${v.name}</span> <span class="language-percentage">(${v.percentage}%)</span></div>
                         <div class="progressbar-element-bar" id="${v.code}"></div>
                      </div>
                 `)
