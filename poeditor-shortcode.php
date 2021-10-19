@@ -24,18 +24,17 @@ add_action( 'after_setup_theme', function (){
         Poeditor_Shortcode_Admin::instance();
     }
 
-});
+} );
 
 function get_poeditor_api_key(){
-    return get_option('poeditor_api_key');
+    return get_option( 'poeditor_api_key' );
 }
-
 
 
 /**
  * Class Poeditor_Shortcode
  */
-class Poeditor_Shortcode {
+class Poeditor_Shortcode{
 
     public $token = 'poeditor_shortcode';
     public $title = 'POEditor Shortcode';
@@ -44,20 +43,22 @@ class Poeditor_Shortcode {
 
     /**  Singleton */
     private static $_instance = null;
-    public static function instance() {
-        if ( is_null( self::$_instance ) ) {
+
+    public static function instance(){
+        if ( is_null( self::$_instance ) ){
             self::$_instance = new self();
         }
         return self::$_instance;
     }
+
     /**
      * Constructor function.
      * @access  public
      * @since   0.1.0
      */
-    public function __construct() {
+    public function __construct(){
         $this->api_key = get_poeditor_api_key();
-        if ( empty( $this->api_key  ) ) {
+        if ( empty( $this->api_key ) ){
             return;
         }
 
@@ -80,44 +81,50 @@ class Poeditor_Shortcode {
                 border: 1px solid lightgrey;
                 height: 40px;
             }
+
             .ui-progressbar-value {
                 background-color: #8bc34a;
                 height: 40px;
             }
+
             .progressbar-element-wrapper {
                 width: 100%;
-                padding-bottom:20px;
+                padding-bottom: 20px;
             }
+
             .progressbar-element-title {
             }
+
             .progressbar-element-bar {
             }
+
             span.language-name {
-                font-size:1.3em;
-                font-weight:bold;
+                font-size: 1.3em;
+                font-weight: bold;
             }
+
             span.language-percentage {
-                font-size:1.3em;
-                font-weight:bold;
+                font-size: 1.3em;
+                font-weight: bold;
             }
         </style>
         <div id="language_list"></div>
         <script>
-            let languages = [<?php echo  json_encode($languages) ?>][0]
+            let languages = [<?php echo json_encode( $languages ) ?>][0]
             let language_list = jQuery('#language_list')
-            jQuery(document).ready( function() {
-                jQuery.each(languages, function(i,v){
+            jQuery(document).ready(function () {
+                jQuery.each(languages, function (i, v) {
                     language_list.append(`
                      <div class="progressbar-element-wrapper">
-                        <div class="progressbar-element-title"><span class="language-name">${v.name}</span> <span class="language-percentage">(${v.percentage }%)</span></div>
+                        <div class="progressbar-element-title"><span class="language-name">${v.name}</span> <span class="language-percentage">(${v.percentage}%)</span></div>
                         <div class="progressbar-element-bar" id="${v.code}"></div>
                      </div>
                 `)
-                    jQuery('#'+v.code).progressbar({
+                    jQuery('#' + v.code).progressbar({
                         value: v.percentage
                     })
                 })
-            } );
+            });
 
             console.log(languages)
         </script>
@@ -126,7 +133,7 @@ class Poeditor_Shortcode {
         return ob_get_clean();
     }
 
-    public function list_project_languages( $project_id ) {
+    public function list_project_languages( $project_id ){
         $api_url = 'https://api.poeditor.com/v2/languages/list';
         $args = [
             'method' => 'POST',
@@ -137,22 +144,19 @@ class Poeditor_Shortcode {
         ];
         $response = wp_remote_post( $api_url, $args );
 
-        if ( is_wp_error( $response ) ) {
-            dt_write_log($response);
+        if ( is_wp_error( $response ) ){
+            dt_write_log( $response );
             return [];
-        }
-        else {
+        } else {
             $response_content = json_decode( $response['body'], true );
-            if ( $response_content['response']['status'] === 'success' ) {
+            if ( $response_content['response']['status'] === 'success' ){
                 $languages = $response_content['result']['languages'];
-                dt_write_log($response_content);
+                dt_write_log( $response_content );
                 return $languages;
-            }
-            else {
-                dt_write_log(new WP_Error(__METHOD__, 'failed response from the poeditor api'));
+            } else {
+                dt_write_log( new WP_Error( __METHOD__, 'failed response from the poeditor api' ) );
                 return [];
             }
-
         }
 
     }
@@ -162,7 +166,7 @@ class Poeditor_Shortcode {
 /**
  * Class Poeditor_Shortcode
  */
-class Poeditor_Shortcode_Admin {
+class Poeditor_Shortcode_Admin{
 
     public $token = 'poeditor_shortcode';
     public $title = 'POEditor Shortcode';
@@ -170,20 +174,22 @@ class Poeditor_Shortcode_Admin {
 
     /**  Singleton */
     private static $_instance = null;
-    public static function instance() {
-        if ( is_null( self::$_instance ) ) {
+
+    public static function instance(){
+        if ( is_null( self::$_instance ) ){
             self::$_instance = new self();
         }
         return self::$_instance;
     }
+
     /**
      * Constructor function.
      * @access  public
      * @since   0.1.0
      */
-    public function __construct() {
+    public function __construct(){
 
-        if ( is_admin() ) {
+        if ( is_admin() ){
             add_action( "admin_menu", [ $this, "register_menu" ] );
             // adds links to the plugin description area in the plugin admin list.
             add_filter( 'plugin_row_meta', [ $this, 'plugin_description_links' ], 10, 4 );
@@ -196,7 +202,7 @@ class Poeditor_Shortcode_Admin {
      * Loads the subnav page
      * @since 0.1
      */
-    public function register_menu() {
+    public function register_menu(){
         add_menu_page( 'Extensions (DT)', 'Extensions (DT)', $this->permissions, 'dt_extensions', [ $this, 'extensions_menu' ], 'dashicons-admin-generic', 59 );
         add_submenu_page( 'dt_extensions', $this->title, $this->title, $this->permissions, $this->token, [ $this, 'content' ] );
     }
@@ -204,15 +210,16 @@ class Poeditor_Shortcode_Admin {
     /**
      * Menu stub. Replaced when Disciple Tools Theme fully loads.
      */
-    public function extensions_menu() {}
+    public function extensions_menu(){
+    }
 
     /**
      * Builds page contents
      * @since 0.1
      */
-    public function content() {
+    public function content(){
 
-        if ( !current_user_can( $this->permissions ) ) { // manage dt is a permission that is specific to Disciple Tools and allows admins, strategists and dispatchers into the wp-admin
+        if ( !current_user_can( $this->permissions ) ){ // manage dt is a permission that is specific to Disciple Tools and allows admins, strategists and dispatchers into the wp-admin
             wp_die( 'You do not have sufficient permissions to access this page.' );
         }
 
@@ -247,13 +254,13 @@ class Poeditor_Shortcode_Admin {
         <?php
     }
 
-    public function meta_box_add_api_key() {
+    public function meta_box_add_api_key(){
         if ( isset( $_POST['poeditor_api_nonce'] )
-            && wp_verify_nonce( sanitize_text_field(wp_unslash( $_POST['poeditor_api_nonce'] ) ), 'poeditor_api'. get_current_user_id() )
-        ) {
-            if ( isset( $_POST['poeditor_key'] ) && ! empty( $_POST['poeditor_key'] ) ) {
+            && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['poeditor_api_nonce'] ) ), 'poeditor_api' . get_current_user_id() )
+        ){
+            if ( isset( $_POST['poeditor_key'] ) && !empty( $_POST['poeditor_key'] ) ){
                 $key = sanitize_text_field( wp_unslash( $_POST['poeditor_key'] ) );
-                update_option('poeditor_api_key', $key, false );
+                update_option( 'poeditor_api_key', $key, false );
             } else {
                 delete_option( 'poeditor_api_key' );
             }
@@ -262,7 +269,7 @@ class Poeditor_Shortcode_Admin {
         ?>
         <!-- Box -->
         <form method="post">
-            <?php wp_nonce_field('poeditor_api'. get_current_user_id(), 'poeditor_api_nonce') ?>
+            <?php wp_nonce_field( 'poeditor_api' . get_current_user_id(), 'poeditor_api_nonce' ) ?>
             <table class="widefat striped">
                 <thead>
                 <tr>
@@ -272,10 +279,15 @@ class Poeditor_Shortcode_Admin {
                 <tbody>
                 <tr>
                     <td>
-                        Add API Key for POEditor: <input type="text" class="regular-text" name="poeditor_key" value="<?php echo esc_attr( $current_key) ?>" /><br>
+                        Add API Key for POEditor: <input type="text" class="regular-text" name="poeditor_key"
+                                                         value="<?php echo esc_attr( $current_key ) ?>"/><br>
                     </td>
                 </tr>
-                <tr><td><button type="submit" class="button">Update</button></td></tr>
+                <tr>
+                    <td>
+                        <button type="submit" class="button">Update</button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </form>
@@ -286,7 +298,7 @@ class Poeditor_Shortcode_Admin {
 
     public function meta_box_shortcodes(){
         $api_key = get_poeditor_api_key();
-        if ( empty( $api_key ) ) {
+        if ( empty( $api_key ) ){
             return;
         }
 
@@ -301,13 +313,15 @@ class Poeditor_Shortcode_Admin {
             </thead>
             <tbody>
             <?php
-            if ( is_array( $projects ) ) {
-                foreach($projects as $project){
+            if ( is_array( $projects ) ){
+                foreach ( $projects as $project ){
                     ?>
                     <tr>
                         <td><?php echo esc_html( $project['name'] ) ?></td>
                         <td><?php echo esc_html( $project['id'] ) ?></td>
-                        <td>[poeditor_shortcode id="<?php echo esc_html( $project['id'] ) ?>" name="<?php echo esc_html( $project['name'] ) ?>"]</td>
+                        <td>[poeditor_shortcode id="<?php echo esc_html( $project['id'] ) ?>"
+                            name="<?php echo esc_html( $project['name'] ) ?>"]
+                        </td>
                     </tr>
                     <?php
                 }
@@ -320,7 +334,7 @@ class Poeditor_Shortcode_Admin {
         <?php
     }
 
-    public function list_projects() {
+    public function list_projects(){
         $api_key = get_poeditor_api_key();
         $list_projects_url = 'https://api.poeditor.com/v2/projects/list';
         $args = [
@@ -330,35 +344,36 @@ class Poeditor_Shortcode_Admin {
             ]
         ];
         $response = wp_remote_post( $list_projects_url, $args );
-        if ( is_wp_error( $response ) ) {
-            dt_write_log($response);
+        if ( is_wp_error( $response ) ){
+            dt_write_log( $response );
             return [];
-        }
-        else {
+        } else {
             $response_content = json_decode( $response['body'], true );
-            if ( $response_content['response']['status'] === 'success' ) {
+            if ( $response_content['response']['status'] === 'success' ){
                 $projects = $response_content['result']['projects'];
                 return $projects;
-            }
-            else {
-                dt_write_log(new WP_Error(__METHOD__, 'failed response from the poeditor api'));
+            } else {
+                dt_write_log( new WP_Error( __METHOD__, 'failed response from the poeditor api' ) );
                 return [];
             }
         }
     }
 
-    public function right_column() {
+    public function right_column(){
         ?>
         <!-- Box -->
         <table class="widefat striped">
             <thead>
-            <tr><th>Information</th></tr>
+            <tr>
+                <th>Information</th>
+            </tr>
             </thead>
             <tbody>
             <tr>
                 <td>
                     This is a simple plugin that connects to a POEditor project through an API key provided to admins in
-                    the account area. Using this key it generates shortcodes for each project and that shortcode can be added
+                    the account area. Using this key it generates shortcodes for each project and that shortcode can be
+                    added
                     to any page or post to list with a progress bar the status of that language.
                 </td>
             </tr>
@@ -408,14 +423,14 @@ class Poeditor_Shortcode_Admin {
      * Appends additional links below each/specific plugin on the plugins page.
      *
      * @access  public
-     * @param   array       $links_array            An array of the plugin's metadata
-     * @param   string      $plugin_file_name       Path to the plugin file
-     * @param   array       $plugin_data            An array of plugin data
-     * @param   string      $status                 Status of the plugin
+     * @param array $links_array An array of the plugin's metadata
+     * @param string $plugin_file_name Path to the plugin file
+     * @param array $plugin_data An array of plugin data
+     * @param string $status Status of the plugin
      * @return  array       $links_array
      */
-    public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
-        if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
+    public function plugin_description_links( $links_array, $plugin_file_name, $plugin_data, $status ){
+        if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ){
             // You can still use `array_unshift()` to add links at the beginning.
 
             $links_array[] = '<a href="https://disciple.tools">Disciple.Tools Community</a>'; // @todo replace with your links.
@@ -429,55 +444,55 @@ class Poeditor_Shortcode_Admin {
     /**
      * Method that runs only when the plugin is activated.
      *
+     * @return void
      * @since  0.1
      * @access public
-     * @return void
      */
-    public static function activation() {
+    public static function activation(){
 
     }
 
     /**
      * Method that runs only when the plugin is deactivated.
      *
+     * @return void
      * @since  0.1
      * @access public
-     * @return void
      */
-    public static function deactivation() {
+    public static function deactivation(){
 
     }
 
     /**
      * Magic method to output a string if trying to use the object as a string.
      *
+     * @return string
      * @since  0.1
      * @access public
-     * @return string
      */
-    public function __toString() {
+    public function __toString(){
         return $this->token;
     }
 
     /**
      * Magic method to keep the object from being cloned.
      *
+     * @return void
      * @since  0.1
      * @access public
-     * @return void
      */
-    public function __clone() {
+    public function __clone(){
         _doing_it_wrong( __FUNCTION__, esc_html( 'Whoah, partner!' ), '0.1' );
     }
 
     /**
      * Magic method to keep the object from being unserialized.
      *
+     * @return void
      * @since  0.1
      * @access public
-     * @return void
      */
-    public function __wakeup() {
+    public function __wakeup(){
         _doing_it_wrong( __FUNCTION__, esc_html( 'Whoah, partner!' ), '0.1' );
     }
 
@@ -491,9 +506,9 @@ class Poeditor_Shortcode_Admin {
      * @since  0.1
      * @access public
      */
-    public function __call( $method = '', $args = array() ) {
+    public function __call( $method = '', $args = array() ){
         // @codingStandardsIgnoreLine
-        _doing_it_wrong( __FUNCTION__, esc_html('Whoah, partner!'), '0.1' );
+        _doing_it_wrong( __FUNCTION__, esc_html( 'Whoah, partner!' ), '0.1' );
         unset( $method, $args );
         return null;
     }
