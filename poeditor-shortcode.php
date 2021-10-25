@@ -3,7 +3,7 @@
  * Plugin Name: POEditor Shortcode
  * Plugin URI: https://github.com/ZumeProject/poeditor-shortcode
  * Description: This simple plugin connects to a POEditor project and gets the list and status of active languages and places it into a shortcode to be installed on a page.
- * Version:  0.1.0
+ * Version:  0.2
  * Author URI: https://github.com/ZumeProject
  * GitHub Plugin URI: https://github.com/ZumeProject/poeditor-shortcode
  * Requires at least: 4.7.0
