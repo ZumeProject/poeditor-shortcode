@@ -37,6 +37,7 @@ function get_poeditor_api_key(){
 class Poeditor_Shortcode{
 
     public $token = 'poeditor_shortcode';
+    public $api_key = '';
     public $title = 'POEditor Shortcode';
     public $permissions = 'manage_options';
     public $namespace = '';
